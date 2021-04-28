@@ -7,3 +7,4 @@ Apollo server de tareas 📚
 ### `npm mongoose`
 ### `npm i apollo-server graphql`
 ###  ` npm i --save-dev nodemon`
+### `npm i jsonwebtoken`
