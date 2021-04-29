@@ -1,6 +1,12 @@
+      //* MODELOS */
 const Usuario = require('../models/Usuario');
 const Proyecto = require('../models/Proyecto');
+const Tarea = require('../models/Tarea');
 
+
+
+
+/** DEPENDENCIAS */
 const bcryptjs = require ('bcryptjs');
 const jwt  = require('jsonwebtoken');
 require('dotenv').config({path: 'variables.env'});
@@ -29,6 +35,11 @@ const resolvers = {
           const proyectos = await Proyecto.find({ creador: ctx.usuario.id });
           return proyectos;
 
+        },
+        obtenerTareas: async(_, {input}, ctx) =>{
+          const tareas = await Tarea.find({creador: ctx.usuario.id}).where('proyecto').equals(input.proyecto);
+
+          return tareas;
         }
 
     },
@@ -154,7 +165,70 @@ const resolvers = {
 
           return 'Proyecto Eliminado';
 
+        },
+
+        nuevaTarea: async(_, {input}, ctx) => {
+
+          try {
+            
+            const tarea = await Tarea.create({
+              nombre: input.nombre,
+              proyecto: input.proyecto,
+              creador: ctx.usuario.id
+            });
+
+            return tarea;
+          
+          } catch (error) {
+            console.log(error);
+          }
+        },
+
+        actualizarTarea: async(_, {id,input, estado}, ctx) => {
+
+          //--- si la tarea existe o no ---//
+          let tarea = await Tarea.findById(id);
+
+          if (!tarea) {
+            throw new Error('Tarea no encontrada');
+          }
+
+          //--- si la persona que edita es el propetario ---//
+          if(tarea.creador.toString() !== ctx.usuario.id){
+              throw new Error('No tiene las crendenciales para actualizar')
+          }
+
+          //--- asinacion del estado --//
+          input.estado = estado;
+
+          //--- guardar la tarea ---//
+          tarea = await Tarea.findOneAndUpdate({_id: id}, input, {new: true});
+
+          return tarea;
+
+        },
+
+        eliminarTarea: async(_, {id}, ctx) =>{
+
+          //--- si la tarea existe o no ---//
+          let tarea = await Tarea.findById(id);
+
+          if (!tarea) {
+            throw new Error('Tarea no encontrada');
+          }
+
+          //--- si la persona que edita es el propetario ---//
+          if(tarea.creador.toString() !== ctx.usuario.id){
+            throw new Error('No tiene las crendenciales para actualizar');
+          }
+            
+          //--- Eliminar ---//
+          await Tarea.findOneAndDelete({_id: id});
+          
+          return 'Tarea Eliminada';
+
         }
+
     }
 }
 
