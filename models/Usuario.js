@@ -12,6 +12,7 @@ const UsuariosSchema = mongoose.Schema({
         require: true,
         trim: true,
         unique: true, //Solo un usuario por correo(llave unica)
+        lowercase: true, //para que el correo sea en minusculas
 
     },
     password:{
