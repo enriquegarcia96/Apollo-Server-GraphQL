@@ -68,7 +68,7 @@ const resolvers = {
             //--- Registrar Nuevo Usuario ---//
             const nuevoUsuario = new Usuario(input);
             nuevoUsuario.save();// lo guarda en la base de datos de MONGODB
-            return 'Usuario Creado con Correctamente';
+            return 'Usuario Creado Correctamente';
 
           } catch (error) {
             console.log(error);
