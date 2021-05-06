@@ -17,9 +17,9 @@ require('dotenv').config({path: 'variables.env'});
 //--- Crea y firma de un JWT ---//
 const crearToken = (usuario, secreta, expiresIn) => {
 
-  const { id, email } = usuario;
+  const { id, email, nombre } = usuario;
 
-  return jwt.sign( { id, email }, secreta, { expiresIn } );//expiresIn => busca esta propiedad
+  return jwt.sign( { id, email, nombre }, secreta, { expiresIn } );//expiresIn => busca esta propiedad
 }
 
 
@@ -99,7 +99,7 @@ const resolvers = {
 
           //--- Dar acceso a la app ---//
           return {
-            token: crearToken(existeUsuario, process.env.SECRETA, '2hr')
+            token: crearToken(existeUsuario, process.env.SECRETA, '4hr')
           }
         },
 

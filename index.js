@@ -19,12 +19,18 @@ const server = new ApolloServer({
     typeDefs, 
     resolvers,
     context: ({ req }) => {
+
+        //console.log(req.headers['authorization']);
+
+        
+        //.- Leo el token .-//
         const token = req.headers['authorization'] || '';
 
         if (token) {
             
             try {
-                const usuario = jwt.verify(token, process.env.SECRETA);
+                const usuario = jwt.verify(token.replace('Bearer ', ''), process.env.SECRETA);
+                console.log(usuario)
                 return {
                     usuario
                 };
